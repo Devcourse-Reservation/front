@@ -1,20 +1,24 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import { SelectChangeEvent } from '@mui/material/Select'; // MUI의 SelectChangeEvent 타입
+import TicketIcon from '../images/TicketIcon';
+import ArrivalButton from '../Buttons/ArrivalButton';
+import DepartureButton from '../Buttons/DepartButton';
 
 export default function LocationSelect() {
     const [from, setFrom] = React.useState<string>('서울');
     const [to, setTo] = React.useState<string>('부산');
 
-    const handleFromChange = (event: SelectChangeEvent<string>) => {
-        setFrom(event.target.value);
+    const handleFromChange = (newFrom: string) => {
+        setFrom(newFrom);
     };
 
-    const handleToChange = (event: SelectChangeEvent<string>) => {
-        setTo(event.target.value);
+    const handleToChange = (newTo: string) => {
+        setTo(newTo);
+    };
+
+    const swapLocations = () => {
+        setFrom(to);
+        setTo(from);
     };
 
     return (
@@ -22,46 +26,36 @@ export default function LocationSelect() {
             sx={{
                 display: 'flex',
                 flexDirection: 'row',
+                justifyContent: 'center',
                 alignItems: 'center',
-                gap: 2,
+                gap: 4,
             }}
         >
             {/* 출발지 선택 */}
-            <Box>
-                <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                    From
-                </Typography>
-                <Select
+            <Box
+            // sx={{
+            //     margin: 0,
+            //     justifyItems: 'center'
+            // }}
+            >
+                <DepartureButton
                     value={from}
                     onChange={handleFromChange}
-                    displayEmpty
-                    sx={{ width: 120 }}
-                >
-                    <MenuItem value="서울">서울</MenuItem>
-                    <MenuItem value="부산">부산</MenuItem>
-                    <MenuItem value="제주">제주</MenuItem>
-                    <MenuItem value="대구">대구</MenuItem>
-                </Select>
+                />
             </Box>
 
-            <Typography variant="body1">=</Typography>
+            <TicketIcon onClick={swapLocations} style={{ cursor: 'pointer' }} />
 
             {/* 도착지 선택 */}
-            <Box>
-                <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                    To
-                </Typography>
-                <Select
+            <Box
+                sx={{
+                    margin: 0,
+                    justifyItems: 'center'
+                }}>
+                <ArrivalButton
                     value={to}
                     onChange={handleToChange}
-                    displayEmpty
-                    sx={{ width: 120 }}
-                >
-                    <MenuItem value="서울">서울</MenuItem>
-                    <MenuItem value="부산">부산</MenuItem>
-                    <MenuItem value="제주">제주</MenuItem>
-                    <MenuItem value="대구">대구</MenuItem>
-                </Select>
+                />
             </Box>
         </Box>
     );

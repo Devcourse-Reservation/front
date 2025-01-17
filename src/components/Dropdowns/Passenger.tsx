@@ -28,67 +28,69 @@ export default function Passenger() {
 
   return (
     <Box
-      className="passenger-text-container"
+      className="passengers-text-container"
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        gap: 2,
-        margin: '20px',
-        alignItems: 'center',
-      }}
-    >
-      <Typography variant="h6" align="center">
-        탑승 인원
-      </Typography>
+        marginLeft: 'auto',
+        marginRight: 'auto'
+      }}>
       <Box
-        className="passenger-container"
+        className="passenger-text-container"
         sx={{
           display: 'flex',
-          flexDirection: 'row',
+          flexDirection: 'column',
           gap: 2,
-          justifyContent: 'center',
         }}
       >
+        <Typography variant="h6" align="center" color='#2D2736'>
+          탑승 인원
+        </Typography>
+        <Box
+          className="passenger-container"
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            gap: 2,
+            justifyContent: 'center',
+          }}
+        >
+          {/* 성인 수 선택 */}
+          <FormControl sx={{ minWidth: 100, height: 75 }}>
+            <InputLabel id="grouped-adult-label">성인</InputLabel>
+            <Select
+              labelId="grouped-adult-label"
+              value={adults}
+              onChange={handleAdultsChange}
+              label="성인"
+            >
+              {Array.from({ length: maxPassengers }, (_, i) => (
+                <MenuItem key={i + 1} value={i + 1}>
+                  {i + 1}명
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
-        {/* 성인 수 선택 */}
-        <FormControl sx={{ minWidth: 120 }}>
-          <InputLabel id="grouped-adult-label">성인</InputLabel>
-          <Select
-            labelId="grouped-adult-label"
-            value={adults}
-            onChange={handleAdultsChange}
-            label="성인"
-          >
-            {Array.from({ length: maxPassengers }, (_, i) => (
-              <MenuItem key={i + 1} value={i + 1}>
-                {i + 1}명
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        {/* 아동 수 선택 */}
-        <FormControl sx={{ minWidth: 120 }}>
-          <InputLabel id="grouped-children-label">아동</InputLabel>
-          <Select
-            labelId="grouped-children-label"
-            value={children}
-            onChange={handleChildrenChange}
-            label="아동"
-          >
-            {Array.from({ length: maxPassengers + 1 }, (_, i) => (
-              <MenuItem key={i} value={i}>
-                {i}명
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+          {/* 아동 수 선택 */}
+          <FormControl sx={{ minWidth: 100 }}>
+            <InputLabel id="grouped-children-label">아동</InputLabel>
+            <Select
+              labelId="grouped-children-label"
+              value={children}
+              onChange={handleChildrenChange}
+              label="아동"
+            >
+              {Array.from({ length: maxPassengers + 1 }, (_, i) => (
+                <MenuItem key={i} value={i}>
+                  {i}명
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
-
       {/* 유효성 검사 및 경고 메시지 */}
-      <FormHelperText>
-        최대 {maxPassengers}인까지 예매 가능합니다. 현재 인원: {adults + children}명
-      </FormHelperText>
-    </Box>
+    </Box >
   );
 }

@@ -1,11 +1,15 @@
+import Logo from "../images/Logo"
+
 const Header = () => {
     return (
         <div className="header-container"
             style={{
-                height: '250px',
+                marginLeft: '15vh'
             }}
         >
-            <header>Proaliance</header>
+            <header>
+                <Logo />
+            </header>
         </div>
     )
 }

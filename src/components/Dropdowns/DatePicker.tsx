@@ -10,7 +10,6 @@ function SelectDate() {
     const [departureDate, setDepartureDate] = React.useState<Dayjs | null>(null); // 출발 날짜
     const [arrivalDate, setArrivalDate] = React.useState<Dayjs | null>(null);     // 도착 날짜
 
-    // 출발 날짜 변경 핸들러
     const handleDepartureDateChange = (newValue: Dayjs | null) => {
         setDepartureDate(newValue);
         // 출발 날짜가 도착 날짜보다 이후라면 도착 날짜를 초기화
@@ -19,7 +18,6 @@ function SelectDate() {
         }
     };
 
-    // 도착 날짜 변경 핸들러
     const handleArrivalDateChange = (newValue: Dayjs | null) => {
         setArrivalDate(newValue);
     };
@@ -32,11 +30,11 @@ function SelectDate() {
                     flexDirection: 'column',
                     gap: 2,
                     width: '100%',
-                    maxWidth: 300, // 부모 컨테이너 크기 제한
-                    margin: 'auto',
+                    maxWidth: 200,
+                    alignContent: 'center'
                 }}
             >
-                <Typography variant="h6" align="center">
+                <Typography variant="h6" align="center" color='#2D2736'>
                     날짜 선택
                 </Typography>
 
@@ -60,10 +58,7 @@ function SelectDate() {
                     slotProps={{
                         textField: {
                             fullWidth: true,
-                            error: !!departureDate && !!arrivalDate && departureDate.isAfter(arrivalDate),
-                            helperText: !!departureDate && !!arrivalDate && departureDate.isAfter(arrivalDate)
-                                ? '출발 날짜는 도착 날짜 이전이어야 합니다.'
-                                : '',
+                            sx: { height: '55px' }
                         },
                     }}
                 />

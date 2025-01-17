@@ -21,11 +21,18 @@ export default function SeatClass() {
 
     return (
 
-        <Box sx={{ minWidth: 120 }}>
-            <Typography variant="h6" align="center">
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 1,
+                marginLeft: 'auto',
+                marginRight: 'auto'
+            }}>
+            <Typography variant="h6" align="center" color='#2D2736'>
                 좌석등급
             </Typography>
-            <FormControl sx={{ m: 1, width: 175 }}>
+            <FormControl sx={{ m: 1, width: 100, height: 75 }}>
                 <InputLabel id="seatclass-select-label">좌석등급</InputLabel>
                 <Select
                     labelId="seatclass-select-label"
