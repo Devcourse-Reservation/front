@@ -7,6 +7,7 @@ import SeatClass from "./Dropdowns/Seatclass";
 import Button from "@mui/material/Button";
 import { FormHelperText } from "@mui/material";
 import LocationSelect from "./Dropdowns/Location";
+import SearchButton from "./Buttons/SearchButton";
 
 export default function ReservationPart() {
     return (
@@ -27,7 +28,8 @@ export default function ReservationPart() {
                 sx={{
                     display: "inline-flex",
                     flexDirection: "row",
-                    width: "100%"
+                    width: "100%",
+                    justifyContent: 'center'
                 }}
             >
                 <Button variant="contained"
@@ -38,7 +40,8 @@ export default function ReservationPart() {
                         backgroundColor: "#1E2A3C",
                         color: "#ffffff",
                         borderTopLeftRadius: "25px",
-                        borderTopRightRadius: '25px'
+                        borderTopRightRadius: '25px',
+                        maxWidth: '393px'
                     }}
                 >
                     <Typography variant="h6">항공권 예매</Typography>
@@ -52,7 +55,8 @@ export default function ReservationPart() {
                         backgroundColor: "#1E2A3C",
                         color: "#ffffff",
                         borderTopLeftRadius: "25px",
-                        borderTopRightRadius: '25px'
+                        borderTopRightRadius: '25px',
+                        maxWidth: '893px'
                     }}>
                     <Typography variant="h6">마일리지 예매</Typography>
                 </Button>
@@ -61,8 +65,9 @@ export default function ReservationPart() {
                 sx={{
                     display: "flex",
                     flexDirection: 'row',
-                    height: '20vh',
+                    height: '24vh',
                     alignItems: "stretch",
+                    justifyContent: 'center'
                 }}
             >
 
@@ -74,12 +79,12 @@ export default function ReservationPart() {
                         padding: 2,
                         display: "flex",
                         flexDirection: "column",
+
                         borderBottomLeftRadius: "25px",
+                        maxWidth: '360px',
                     }}
                 >
-                    <Box sx={{ marginTop: 6 }}>
-                        <LocationSelect />
-                    </Box>
+                    <LocationSelect />
                 </Paper>
 
                 {/* 오른쪽 카드 */}
@@ -92,9 +97,15 @@ export default function ReservationPart() {
                         flexDirection: "row",
                         justifyContent: 'space-around',
                         borderBottomRightRadius: "25px",
+                        maxWidth: '860px',
                     }}
                 >
-                    <SelectDate />
+                    <Box
+                        sx={{
+                            marginTop: 6
+                        }}>
+                        <SelectDate />
+                    </Box>
                     <Box
                         className="passenger-seatclass-container"
                         sx={{
@@ -108,6 +119,7 @@ export default function ReservationPart() {
                             sx={{
                                 display: 'flex',
                                 flexDirection: 'column',
+                                marginTop: 10,
                                 gap: 0
                             }}>
                             <Passenger />
@@ -115,7 +127,18 @@ export default function ReservationPart() {
                                 최대 9인까지 예매 가능합니다.
                             </FormHelperText>
                         </Box>
-                        <SeatClass />
+                        <Box
+                            sx={{
+                                marginTop: 10
+                            }}>
+                            <SeatClass />
+                        </Box>
+                    </Box>
+                    <Box
+                        sx={{
+                            marginTop: 15
+                        }}>
+                        <SearchButton />
                     </Box>
                 </Paper>
             </Box>

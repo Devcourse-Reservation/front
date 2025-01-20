@@ -43,7 +43,7 @@ export default function Passenger() {
           gap: 2,
         }}
       >
-        <Typography variant="h6" align="center" color='#2D2736'>
+        <Typography align="center" color='#5E5E5E'>
           탑승 인원
         </Typography>
         <Box

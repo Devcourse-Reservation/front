@@ -34,7 +34,7 @@ function SelectDate() {
                     alignContent: 'center'
                 }}
             >
-                <Typography variant="h6" align="center" color='#2D2736'>
+                <Typography align="center" color='#5E5E5E'>
                     날짜 선택
                 </Typography>
 
@@ -58,7 +58,9 @@ function SelectDate() {
                     slotProps={{
                         textField: {
                             fullWidth: true,
-                            sx: { height: '55px' }
+                            sx: {
+                                height: '55px',
+                            }
                         },
                     }}
                 />

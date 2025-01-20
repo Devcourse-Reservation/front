@@ -4,7 +4,6 @@ import Layout from "./components/layouts/Layout";
 import ReservationPart from "./components/ReservationPart";
 import BackgroundBox from "./components/images/Background";
 
-
 const App: React.FC = () => {
   return (
     <Layout>

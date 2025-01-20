@@ -13,14 +13,13 @@ export default function SeatClass() {
         setSeatClass(event.target.value);
     };
 
-    // 좌석 등급 데이터 (동적 생성 가능)
     const seatOptions = [
-        { value: '1', label: '일반석' },
-        { value: '2', label: '프로라이언스석' },
+        { value: '1', label: '일반석', image: '/seatclass.png' },
+        { value: '2', label: '비즈니스석', image: '/seatclass.png' },
     ];
+    const selectedOption = seatOptions.find(option => option.value === seatClass);
 
     return (
-
         <Box
             sx={{
                 display: "flex",
@@ -28,18 +27,34 @@ export default function SeatClass() {
                 gap: 1,
                 marginLeft: 'auto',
                 marginRight: 'auto'
-            }}>
-            <Typography variant="h6" align="center" color='#2D2736'>
+            }}
+        >
+            <Typography align="center" color='#5E5E5E'>
                 좌석등급
             </Typography>
-            <FormControl sx={{ m: 1, width: 100, height: 75 }}>
-                <InputLabel id="seatclass-select-label">좌석등급</InputLabel>
+
+            <FormControl sx={{ m: 1, width: 150, height: 75 }}>
                 <Select
                     labelId="seatclass-select-label"
                     id="seatclass-select"
                     value={seatClass}
                     onChange={handleChange}
-                    label="좌석등급"
+                    renderValue={() => (
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 1,
+                            }}
+                        >
+                            <img
+                                src={selectedOption?.image}
+                                alt={selectedOption?.label}
+                                style={{ width: 24, height: 24 }}
+                            />
+                            {selectedOption?.label}
+                        </Box>
+                    )}
                 >
                     {seatOptions.map((option) => (
                         <MenuItem key={option.value} value={option.value}>

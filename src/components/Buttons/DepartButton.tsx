@@ -33,7 +33,6 @@ export default function DepartureButton({ value, onChange }: ButtonProps) {
     return (
         <div>
             <List component="nav" aria-label="Location selector">
-                <Typography sx={{ color: '#5e5e5e', marginLeft: 2 }}>출발지</Typography>
                 <ListItemButton onClick={handleClickListItem}>
                     <ListItemText
                         sx={{
