@@ -13,55 +13,64 @@ export default function LocationSelect() {
         setFrom(event.target.value);
     };
 
-    const handleToChange = (event: SelectChangeEvent<string>) => {
-        setTo(event.target.value);
+    const handleToChange = (newTo: string) => {
+        setTo(newTo);
+    };
+
+    const swapLocations = () => {
+        if (from !== to) {
+            setFrom(to);
+            setTo(from);
+        }
     };
 
     return (
         <Box
             sx={{
                 display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 2,
-            }}
-        >
-            {/* 출발지 선택 */}
-            <Box>
-                <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                    From
-                </Typography>
-                <Select
-                    value={from}
-                    onChange={handleFromChange}
-                    displayEmpty
-                    sx={{ width: 120 }}
-                >
-                    <MenuItem value="서울">서울</MenuItem>
-                    <MenuItem value="부산">부산</MenuItem>
-                    <MenuItem value="제주">제주</MenuItem>
-                    <MenuItem value="대구">대구</MenuItem>
-                </Select>
+                flexDirection: 'column',
+                marginTop: 4
+            }}>
+            <Box
+                className="button-container"
+                sx={{
+                    justifyItems: 'right',
+                }}>
+                <SwitchButton />
             </Box>
 
-            <Typography variant="body1">=</Typography>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: 4,
+                }}
+            >
+                {/* 출발지 선택 */}
+                <Box>
+                    <DepartureButton
+                        value={from}
+                        onChange={handleFromChange}
+                    />
+                </Box>
 
-            {/* 도착지 선택 */}
-            <Box>
-                <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                    To
-                </Typography>
-                <Select
-                    value={to}
-                    onChange={handleToChange}
-                    displayEmpty
-                    sx={{ width: 120 }}
-                >
-                    <MenuItem value="서울">서울</MenuItem>
-                    <MenuItem value="부산">부산</MenuItem>
-                    <MenuItem value="제주">제주</MenuItem>
-                    <MenuItem value="대구">대구</MenuItem>
-                </Select>
+                <TicketIcon
+                    onClick={swapLocations}
+                    style={{ cursor: 'pointer' }}
+                />
+                {/* 도착지 선택 */}
+                <Box
+                    sx={{
+                        margin: 0,
+                        justifyItems: 'center'
+                    }}>
+                    <ArrivalButton
+                        value={to}
+                        onChange={handleToChange}
+                    />
+                </Box>
             </Box>
         </Box>
     );
