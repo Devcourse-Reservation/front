@@ -1,16 +1,16 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import TicketIcon from '../images/TicketIcon';
-import ArrivalButton from '../Buttons/ArrivalButton';
-import DepartureButton from '../Buttons/DepartButton';
-import SwitchButton from '../Buttons/SwitchButton';
+import Typography from '@mui/material/Typography';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import { SelectChangeEvent } from '@mui/material/Select'; // MUI의 SelectChangeEvent 타입
 
 export default function LocationSelect() {
     const [from, setFrom] = React.useState<string>('서울');
     const [to, setTo] = React.useState<string>('부산');
 
-    const handleFromChange = (newFrom: string) => {
-        setFrom(newFrom);
+    const handleFromChange = (event: SelectChangeEvent<string>) => {
+        setFrom(event.target.value);
     };
 
     const handleToChange = (newTo: string) => {
