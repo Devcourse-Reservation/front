@@ -18,8 +18,10 @@ export default function LocationSelect() {
     };
 
     const swapLocations = () => {
-        setFrom(to);
-        setTo(from);
+        if (from !== to) {
+            setFrom(to);
+            setTo(from);
+        }
     };
 
     return (
@@ -47,20 +49,17 @@ export default function LocationSelect() {
                 }}
             >
                 {/* 출발지 선택 */}
-                <Box
-                // sx={{
-                //     margin: 0,
-                //     justifyItems: 'center'
-                // }}
-                >
+                <Box>
                     <DepartureButton
                         value={from}
                         onChange={handleFromChange}
                     />
                 </Box>
 
-                <TicketIcon onClick={swapLocations} style={{ cursor: 'pointer' }} />
-
+                <TicketIcon
+                    onClick={swapLocations}
+                    style={{ cursor: 'pointer' }}
+                />
                 {/* 도착지 선택 */}
                 <Box
                     sx={{

@@ -6,12 +6,10 @@ import BackgroundLetterAvatars from "../Buttons/avatar"
 
 const Header = () => {
     return (
-        <div className="header-container"
+        <div
+            className="header-container"
             style={{
-                marginTop: '7vh',
-                marginLeft: '25vh',
-                marginRight: '25vh',
-                marginBottom: '3vh'
+                margin: '7vh 20vh 3vh 20vh',
             }}
         >
             <header>
@@ -26,9 +24,12 @@ const Header = () => {
                         sx={{
                             fontSize: 45,
                             fontWeight: 'bold',
-
+                            color: '#1E2A3C',
+                            textShadow: '0px 3px 3px gray',
                         }}
-                        style={{ color: '#1E2A3C', textShadow: '0px 3px 3px gray' }}>ProAliance</Typography>
+                    >
+                        ProAliance
+                    </Typography>
                     <Box
                         sx={{
                             display: 'flex',
