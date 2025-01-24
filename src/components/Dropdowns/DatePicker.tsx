@@ -11,7 +11,6 @@ function SelectDate() {
     const [departureDate, setDepartureDate] = React.useState<Dayjs | null>(null);
     const [arrivalDate, setArrivalDate] = React.useState<Dayjs | null>(null);
 
-    // 출발 날짜 변경 핸들러
     const handleDepartureDateChange = (newValue: Dayjs | null) => {
         setDepartureDate(newValue);
         if (arrivalDate && newValue && newValue.isAfter(arrivalDate)) {
@@ -19,7 +18,6 @@ function SelectDate() {
         }
     };
 
-    // 도착 날짜 변경 핸들러
     const handleArrivalDateChange = (newValue: Dayjs | null) => {
         setArrivalDate(newValue);
     };
@@ -60,7 +58,6 @@ function SelectDate() {
                             error: !departureDate,
                             helperText: !departureDate ? '날짜를 선택해주세요.' : '',
                             sx: textFieldStyle,
-
                         },
                     }}
                 />

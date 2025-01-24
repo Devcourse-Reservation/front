@@ -1,12 +1,15 @@
 import React from "react";
 import "./App.css";
-import Layout from "./components/layouts/Layout";
 import ReservationPart from "./components/ReservationPart";
+import Layout from "./components/layouts/Layout";
+import BackgroundBox from "./components/images/Background";
 
 const App: React.FC = () => {
   return (
     <Layout>
-      <ReservationPart />
+      <BackgroundBox>
+        <ReservationPart />
+      </BackgroundBox>
     </Layout>
   );
 };
