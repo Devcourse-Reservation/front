@@ -1,5 +1,5 @@
 import React from 'react';
-import Layout from '../components/layouts/Layout';
+import Layout from '../layouts/Layout';
 import { Box, Container, Grid2, Typography } from '@mui/material';
 
 interface ReservationDetailData {

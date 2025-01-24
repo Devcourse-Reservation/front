@@ -1,6 +1,6 @@
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
-import Layout from '../components/layouts/Layout';
+import Layout from '../layouts/Layout';
 import { Box, Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
