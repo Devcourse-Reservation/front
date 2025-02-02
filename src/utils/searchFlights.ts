@@ -32,7 +32,8 @@ export const searchFlights = async ({
     }
 
     const data = await response.json()
-    console.log('검색결과: ', data)
+    console.log('검색 결과: ', data)
+
 
     return data
   } catch (err) {

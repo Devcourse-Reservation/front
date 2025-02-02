@@ -3,17 +3,21 @@ import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
-import { FormHelperText } from '@mui/material'
+import { Container, FormHelperText } from '@mui/material'
 import LocationSelect from './Dropdowns/Location'
 import SelectDate from './Dropdowns/DatePicker'
 import Passenger from './Dropdowns/Passenger'
 import SeatClass from './Dropdowns/Seatclass'
 import SearchButton from './Buttons/SearchButton'
 import SwitchButton from './Buttons/SwitchButton'
+import BackgroundBox from './images/Background'
+import Layout from './layouts/Layout'
+import { useNavigate } from 'react-router-dom'
+import { searchFlights } from '../utils/searchFlights'
 
 const TicketTypeButtons = () => {
   const buttonStyle = {
-    height: '5vh',
+    height: '7vh',
     padding: 2,
     backgroundColor: '#1E2A3C',
     color: '#ffffff',
@@ -32,7 +36,7 @@ const TicketTypeButtons = () => {
     >
       <Button
         variant="contained"
-        sx={{ ...buttonStyle, flex: 1, maxWidth: '393px' }}
+        sx={{ ...buttonStyle, flex: 1, maxWidth: '313px' }}
       >
         <Typography variant="h6">항공권 예매</Typography>
       </Button>
@@ -68,8 +72,8 @@ const LeftCard: React.FC<LeftCardProps> = ({
       flexDirection: 'column',
       justifyContent: 'center',
       borderBottomLeftRadius: '25px',
-      maxWidth: '360px',
-      height: '30vh',
+      maxWidth: '280px',
+      height: '25vh',
     }}
   >
     <SwitchButton />
@@ -115,16 +119,16 @@ const RightCard: React.FC<RightCardProps> = ({
       justifyContent: 'space-around',
       borderBottomRightRadius: '25px',
       maxWidth: '860px',
-      height: '30vh',
+      height: '25vh',
       alignItems: 'center',
     }}
   >
     <Box>
       <SelectDate
         departureDate={departureDate}
-        setDepartureDate={setDepartureDate}
+        setDepartureDate={(date) => setDepartureDate(date)}
         returnDate={returnDate}
-        setReturnDate={setReturnDate}
+        setReturnDate={(date) => setReturnDate(date)}
       />
     </Box>
     <Box
@@ -141,18 +145,17 @@ const RightCard: React.FC<RightCardProps> = ({
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          marginTop: 10,
           gap: 0,
         }}
       >
         <Passenger value={passengers} onChange={setPassengers} />
         <FormHelperText>최대 9인까지 예매 가능합니다.</FormHelperText>
       </Box>
-      <Box sx={{ marginTop: 10 }}>
+      <Box>
         <SeatClass value={seatClass} onChange={setSeatClass} />
       </Box>
     </Box>
-    <Box sx={{ marginTop: 15 }}>
+    <Box>
       <SearchButton onSearch={handleSearch} />
     </Box>
   </Paper>
@@ -181,74 +184,81 @@ export default function ReservationPart() {
   >(null)
   const [error, setError] = useState<string | null>(null)
 
+  const navigate = useNavigate()
+
   const handleSearch = async () => {
     try {
-      const response = await fetch('url', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          origin: origin.split(' ')[0],
-          destination: destination.split(' ')[0],
-          departureDate,
-          returnDate,
-          passengers: passengers.adults + passengers.children,
-          seatClass,
-        }),
+      const data = await searchFlights({
+        origin,
+        destination,
+        departureDate,
+        returnDate,
+        passengers: passengers.adults + passengers.children,
+        seatClass,
       })
 
-      if (!response.ok) {
-        throw new Error('검색 요청 실패')
-      }
-
-      const data = await response.json()
-      console.log('검색결과: ', data)
-
-      setFlights(data)
+      // 검색 결과와 사용자 입력 데이터를 함께 전달하면서 페이지 이동
+      // 임시로 arrival-list 로 이동시키는 것임. departure-list에서도 적용 예정임
+      navigate('/arrival-list', {
+        state: {
+          flights: data,
+          origin,
+          destination,
+          departureDate,
+          returnDate,
+          passengers,
+          seatClass,
+        },
+      })
     } catch (err) {
       setError('항공편 검색 중 오류가 발생했습니다.')
     }
   }
 
   return (
-    <Box
-      className="ticket-container"
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        margin: '15px',
-        justifyContent: 'center',
-        width: '100%',
-        height: '100%',
-      }}
-    >
-      <TicketTypeButtons />
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          height: '24vh',
-          alignItems: 'stretch',
-          justifyContent: 'center',
-        }}
-      >
-        <LeftCard
-          origin={origin}
-          setOrigin={setOrigin}
-          destination={destination}
-          setDestination={setDestination}
-        />
-        <RightCard
-          departureDate={departureDate}
-          setDepartureDate={setDepartureDate}
-          returnDate={returnDate}
-          setReturnDate={setReturnDate}
-          passengers={passengers}
-          setPassengers={setPassengers}
-          seatClass={seatClass}
-          setSeatClass={setSeatClass}
-          handleSearch={handleSearch}
-        />
-      </Box>
-    </Box>
+    <Layout>
+      <BackgroundBox>
+        <Container
+          className="ticket-container"
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            margin: '15px',
+            justifyContent: 'center',
+            width: '100%',
+            height: '70vh',
+          }}
+        >
+          <TicketTypeButtons />
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              height: '24vh',
+              alignItems: 'stretch',
+              justifyContent: 'center',
+            }}
+          >
+            <LeftCard
+              origin={origin}
+              setOrigin={setOrigin}
+              destination={destination}
+              setDestination={setDestination}
+            />
+            <RightCard
+              departureDate={departureDate}
+              setDepartureDate={setDepartureDate}
+              returnDate={returnDate}
+              setReturnDate={setReturnDate}
+              passengers={passengers}
+              setPassengers={setPassengers}
+              seatClass={seatClass}
+              setSeatClass={setSeatClass}
+              handleSearch={handleSearch}
+            />
+          </Box>
+        </Container>
+      </BackgroundBox>
+    </Layout>
   )
 }

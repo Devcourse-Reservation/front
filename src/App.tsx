@@ -1,17 +1,10 @@
-import React from "react";
-import "./App.css";
-import ReservationPart from "./components/ReservationPart";
-import Layout from "./components/layouts/Layout";
-import BackgroundBox from "./components/images/Background";
+import React from 'react'
+import './App.css'
+import ReservationPart from './components/ReservationPart'
+import Layout from './components/layouts/Layout'
 
 const App: React.FC = () => {
-  return (
-    <Layout>
-      <BackgroundBox>
-        <ReservationPart />
-      </BackgroundBox>
-    </Layout>
-  );
-};
+  return <ReservationPart />
+}
 
-export default App;
+export default App
