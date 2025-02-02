@@ -34,6 +34,7 @@ export const searchFlights = async ({
     const data = await response.json()
     console.log('검색 결과: ', data)
 
+
     return data
   } catch (err) {
     console.error('항공편 검색 중 오류 발생: ', err)
