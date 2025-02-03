@@ -14,6 +14,7 @@ import BackgroundBox from './images/Background'
 import Layout from './layouts/Layout'
 import { useNavigate } from 'react-router-dom'
 import { searchFlights } from '../utils/searchFlights'
+import { Flight } from '../types'
 
 const TicketTypeButtons = () => {
   const buttonStyle = {
@@ -164,25 +165,15 @@ const RightCard: React.FC<RightCardProps> = ({
 export default function ReservationPart() {
   const [origin, setOrigin] = useState<string>('ICN')
   const [destination, setDestination] = useState<string>('PUS')
-
   const [departureDate, setDepartureDate] = useState<string | null>(
     '2025-01-21'
   )
   const [returnDate, setReturnDate] = useState<string | null>('2025-01-26')
-
   const [passengers, setPassengers] = useState<{
     adults: number
     children: number
-  }>({
-    adults: 1,
-    children: 0,
-  })
-  const [seatClass, setSeatClass] = useState<string>('1')
-
-  const [flights, setFlights] = useState<
-    { flightNumber: string; price: number }[] | null
-  >(null)
-  const [error, setError] = useState<string | null>(null)
+  }>({ adults: 1, children: 0 })
+  const [seatClass, setSeatClass] = useState<string>('일반석')
 
   const navigate = useNavigate()
 
@@ -197,11 +188,32 @@ export default function ReservationPart() {
         seatClass,
       })
 
-      // 검색 결과와 사용자 입력 데이터를 함께 전달하면서 페이지 이동
-      // 임시로 arrival-list 로 이동시키는 것임. departure-list에서도 적용 예정임
+      console.log('검색된 항공권 데이터: ', data)
+
+      const flightData = data as {
+        departureFlights: Flight[]
+        returnFlights: Flight[]
+      }
+
+      console.log('departureFlights: ', flightData.departureFlights)
+      console.log('returnFlights: ', flightData.returnFlights)
+
+      // 검색 결과와 사용자 입력 데이터를 departure-list와 arrivalist에 전달
+      navigate('/departure-list', {
+        state: {
+          flights: flightData.departureFlights,
+          origin,
+          destination,
+          departureDate,
+          returnDate,
+          passengers,
+          seatClass,
+        },
+      })
+
       navigate('/arrival-list', {
         state: {
-          flights: data,
+          flights: flightData.returnFlights, // 도착편 데이터
           origin,
           destination,
           departureDate,
@@ -211,7 +223,7 @@ export default function ReservationPart() {
         },
       })
     } catch (err) {
-      setError('항공편 검색 중 오류가 발생했습니다.')
+      console.error('항공편 검색 중 오류 발생:', err)
     }
   }
 
@@ -239,12 +251,15 @@ export default function ReservationPart() {
               justifyContent: 'center',
             }}
           >
+            {/* 출발지 & 도착지 */}
             <LeftCard
               origin={origin}
               setOrigin={setOrigin}
               destination={destination}
               setDestination={setDestination}
             />
+
+            {/* 날짜, 탑승 인원, 좌석 등급 */}
             <RightCard
               departureDate={departureDate}
               setDepartureDate={setDepartureDate}
