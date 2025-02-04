@@ -1,89 +1,118 @@
+// 📌 src/pages/ReservationDetail.tsx
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import Layout from '../layouts/Layout'
-import { Box, Container, Typography } from '@mui/material'
-import { getTicketById } from '../../api/tickets'
+import { Box, Container, Typography, CircularProgress } from '@mui/material'
 
-interface TicketDetail {
+const API_URL = 'http://localhost:3000/tickets'
+
+interface ReservationDetail {
   id: number
   reservationNumber: string
-  ticketType: string
+  flightNumber: string
+  airline: string
+  departure: string
+  arrival: string
+  departureTime: string
+  arrivalTime: string
+  seatClass: string
+  seatNumber: string
   status: string
-  reservedAt: string | null
-  cancelledAt: string | null
   createdAt: string
-  seat: { class: string; status: string }
-  flight: {
-    airline: string
-    departureTime: string
-    arrivalTime: string
-    departureAirport: { name: string; code: string }
-    arrivalAirport: { name: string; code: string }
-  }
-  passengerCount: number
 }
 
 export default function ReservationDetail() {
-  const { ticketId } = useParams() // URL에서 ticketId 가져오기
-  const [ticket, setTicket] = useState<TicketDetail | null>(null)
+  const { id } = useParams()
+  const [reservation, setReservation] = useState<ReservationDetail | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchTicketDetails = async () => {
+    const fetchReservationDetail = async () => {
       try {
-        const token = localStorage.getItem('token') // 토큰 저장 위치에 맞게 수정
+        const token = localStorage.getItem('token')
         if (!token) throw new Error('인증 토큰이 없습니다.')
 
-        const data = await getTicketById(Number(ticketId), token)
-        setTicket(data)
+        const response = await fetch(`${API_URL}/${id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        if (!response.ok) throw new Error('예약 정보를 불러올 수 없습니다.')
+
+        const data = await response.json()
+        setReservation(data)
       } catch (err) {
-        setError('티켓 정보를 불러오지 못했습니다.')
+        setError(err instanceof Error ? err.message : '알 수 없는 오류 발생')
+      } finally {
+        setLoading(false)
       }
     }
 
-    fetchTicketDetails()
-  }, [ticketId])
+    fetchReservationDetail()
+  }, [id])
 
-  if (error) return <Typography color="error">{error}</Typography>
+  if (loading)
+    return <CircularProgress sx={{ display: 'block', margin: '20vh auto' }} />
+  if (error)
+    return (
+      <Typography color="error" sx={{ textAlign: 'center', mt: 5 }}>
+        {error}
+      </Typography>
+    )
 
   return (
-    <Layout>
-      <Container fixed>
-        <Box sx={{ height: '100vh', borderRadius: 20 }}>
-          <Box sx={{ padding: '5vw', textAlign: 'center' }}>
+    <Container>
+      <Box sx={{ mt: 5, textAlign: 'center' }}>
+        <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#002597' }}>
+          예약 상세 정보 ✈️
+        </Typography>
+        {reservation ? (
+          <Box
+            sx={{
+              mt: 4,
+              textAlign: 'left',
+              p: 3,
+              borderRadius: 2,
+              boxShadow: 3,
+            }}
+          >
+            <Typography variant="h5">
+              예약 번호: <strong>{reservation.reservationNumber}</strong>
+            </Typography>
+            <Typography variant="h6">
+              항공사: {reservation.airline} ({reservation.flightNumber})
+            </Typography>
+            <Typography variant="h6">
+              출발: {reservation.departure} -{' '}
+              {new Date(reservation.departureTime).toLocaleString()}
+            </Typography>
+            <Typography variant="h6">
+              도착: {reservation.arrival} -{' '}
+              {new Date(reservation.arrivalTime).toLocaleString()}
+            </Typography>
+            <Typography variant="h6">
+              좌석 등급: {reservation.seatClass} (좌석번호:{' '}
+              {reservation.seatNumber})
+            </Typography>
             <Typography
-              variant="h4"
-              sx={{ fontWeight: 'bold', color: '#002597' }}
+              variant="h6"
+              color={reservation.status === 'Confirmed' ? 'green' : 'red'}
             >
-              예약 상세 페이지
+              예약 상태: {reservation.status}
+            </Typography>
+            <Typography variant="body1" sx={{ mt: 2, color: 'gray' }}>
+              예약 일시: {new Date(reservation.createdAt).toLocaleString()}
             </Typography>
           </Box>
-          {ticket ? (
-            <Box sx={{ padding: '3vw', textAlign: 'left' }}>
-              <Typography variant="h5">
-                예약 번호: {ticket.reservationNumber}
-              </Typography>
-              <Typography>항공사: {ticket.flight.airline}</Typography>
-              <Typography>
-                출발: {ticket.flight.departureAirport.name} (
-                {ticket.flight.departureAirport.code}) -{' '}
-                {ticket.flight.departureTime}
-              </Typography>
-              <Typography>
-                도착: {ticket.flight.arrivalAirport.name} (
-                {ticket.flight.arrivalAirport.code}) -{' '}
-                {ticket.flight.arrivalTime}
-              </Typography>
-              <Typography>좌석 등급: {ticket.seat.class}</Typography>
-              <Typography>좌석 상태: {ticket.seat.status}</Typography>
-              <Typography>승객 수: {ticket.passengerCount}명</Typography>
-              <Typography>상태: {ticket.status}</Typography>
-            </Box>
-          ) : (
-            <Typography>예약 정보를 불러오는 중입니다...</Typography>
-          )}
-        </Box>
-      </Container>
-    </Layout>
+        ) : (
+          <Typography sx={{ mt: 5 }}>
+            예약 정보를 불러올 수 없습니다.
+          </Typography>
+        )}
+      </Box>
+    </Container>
   )
 }
