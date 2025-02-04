@@ -1,3 +1,4 @@
+/**ReservationPart.tsx */
 import React, { useState } from 'react'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
@@ -190,36 +191,25 @@ export default function ReservationPart() {
 
       console.log('검색된 항공권 데이터: ', data)
 
-      const flightData = data as {
-        departureFlights: Flight[]
-        returnFlights: Flight[]
+      const flightData = {
+        flights: data.departureFlights,
+        returnFlights: data.returnFlights,
+        origin,
+        destination,
+        departureDate,
+        returnDate,
+        passengers,
+        seatClass,
       }
 
-      console.log('departureFlights: ', flightData.departureFlights)
-      console.log('returnFlights: ', flightData.returnFlights)
+      // localStorage에도 저장해서 새로고침해도 유지
+      localStorage.setItem('flightData', JSON.stringify(flightData))
 
       // 검색 결과와 사용자 입력 데이터를 departure-list와 arrivalist에 전달
       navigate('/departure-list', {
+        replace: true, // 뒤로가기 시 state를 유지하도록 설정
         state: {
-          flights: flightData.departureFlights,
-          origin,
-          destination,
-          departureDate,
-          returnDate,
-          passengers,
-          seatClass,
-        },
-      })
-
-      navigate('/arrival-list', {
-        state: {
-          flights: flightData.returnFlights, // 도착편 데이터
-          origin,
-          destination,
-          departureDate,
-          returnDate,
-          passengers,
-          seatClass,
+          state: flightData,
         },
       })
     } catch (err) {

@@ -1,4 +1,5 @@
-import { useLocation } from 'react-router-dom'
+/**ArrivalList.tsx */
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Box, Container, Divider, Paper, Typography } from '@mui/material'
 import Layout from '../layouts/Layout'
 import BackgroundBox from '../images/Background'
@@ -21,28 +22,67 @@ const seatimage = '/seatclass.png'
 
 export default function ArrivalList() {
   const location = useLocation()
-  const {
-    flights,
-    origin: initialOrigin,
-    destination: initialDestination,
-    returnDate,
-    passengers,
-    seatClass,
-  } = location.state || {}
+  const navigate = useNavigate()
 
-  const [origin, setOrigin] = useState<string>(initialDestination || 'PUS') // ArrivalList는 도착지 기준이므로 반대로
-  const [destination, setDestination] = useState<string>(initialOrigin || 'ICN')
-
+  // localStorage에서 데이터 불러오기 (location.state가 없을 경우)
+  const [flightData, setFlightData] = useState(() => {
+    const storedData = localStorage.getItem('flightData')
+    return location.state || (storedData ? JSON.parse(storedData) : null)
+  })
+  // flightData가 변경될 때마다 localStorage에 저장하여 새로고침 시 유지
   useEffect(() => {
-    console.log('📥 ArrivalList에서 받은 데이터:', location.state)
-  }, [location.state])
+    if (flightData) {
+      localStorage.setItem('flightData', JSON.stringify(flightData))
+    } else {
+      console.warn('🚨 데이터를 찾을 수 없음. 메인 화면으로 이동합니다.')
+    }
+  }, [flightData])
 
-  if (!flights || flights.length === 0) {
+  const [selectedFlight, setSelectedFlight] = useState<FlightData | null>(null)
+
+  // 데이터가 완전히 없을 경우 로딩 UI를 유지 (메인화면으로 이동하지 않음)
+  if (!flightData) {
     return (
       <Typography textAlign="center">
         항공편 정보를 불러오는 중입니다...
       </Typography>
     )
+  }
+
+  const {
+    flights,
+    returnFlights,
+    origin,
+    destination,
+    departureDate,
+    returnDate,
+    passengers,
+    seatClass,
+  } = flightData || {}
+
+  // ✅ returnFlights가 없거나 비어있으면 에러 방지
+  if (!returnFlights || returnFlights.length === 0) {
+    return <Typography textAlign="center">검색된 도착편이 없습니다.</Typography>
+  }
+
+  const handleSelectFlight = (flight: FlightData) => {
+    console.log('출발편 선택:', flight)
+    setSelectedFlight(flight)
+
+    navigate('/arrival-list', {
+      // payment 페이지로 이동할 수 있도록 해야 함
+      replace: true, // 뒤로 가기를 해도 state가 유지되도록 변경
+      state: {
+        flights: flightData.departureFlights, // 선택한 출발편
+        returnFlights: flightData.returnFlights, // 도착편 리스트
+        origin,
+        destination,
+        departureDate,
+        returnDate,
+        passengers,
+        seatClass,
+      },
+    })
   }
 
   return (
@@ -190,7 +230,11 @@ export default function ArrivalList() {
                         textAlign: 'center',
                         margin: '2vw',
                         padding: '2vw',
+                        cursor: 'pointer',
+                        backgroundColor:
+                          selectedFlight?.id === flight.id ? '#ddd' : 'white', // 선택된 항공편 표시
                       }}
+                      onClick={() => handleSelectFlight(flight)} // 클릭 시 도착편 화면으로 이동
                     >
                       <Typography variant="h5">{flight.airline}</Typography>
                       <Typography>
