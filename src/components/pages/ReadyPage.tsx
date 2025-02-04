@@ -17,15 +17,22 @@ export default function ReadyPage() {
 
     socket.onopen = () => {
       console.log('WebSocket 연결 성공👏')
+      socket.send(JSON.stringify({ action: 'requestQueueStatus' }))
     }
 
     socket.onmessage = (event) => {
       try {
+        if (!event.data) {
+          socket.send(JSON.stringify({ action: 'requestQueueStatus' }))
+          return
+        }
+
         const data = JSON.parse(event.data)
-        if (data.position !== undefined) {
+
+        if ('position' in data) {
           setPosition(data.position)
         }
-        if (data.progress != undefined) {
+        if ('progress' in data) {
           setProgress(data.progress)
         }
       } catch (err) {
@@ -40,6 +47,9 @@ export default function ReadyPage() {
 
     socket.onclose = () => {
       console.log('WebSocket 연결 종료')
+      setTimeout(() => {
+        window.location.reload()
+      }, 5000)
     }
     return () => {
       socket.close()

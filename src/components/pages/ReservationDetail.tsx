@@ -1,101 +1,118 @@
-import React from 'react';
-import Layout from '../layouts/Layout';
-import { Box, Container, Grid2, Typography } from '@mui/material';
+// 📌 src/pages/ReservationDetail.tsx
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { Box, Container, Typography, CircularProgress } from '@mui/material'
 
-interface ReservationDetailData {
-    reservationNumber: string;
-    route: string;
-    flightInfo: {
-        departureDate: string;
-        returnDate: string;
-    };
-    seatInfo: string;
-    passengers: {
-        name: string;
-        contact: string;
-    }[];
-    totalPrice: string;
+const API_URL = 'http://localhost:3000/tickets'
+
+interface ReservationDetail {
+  id: number
+  reservationNumber: string
+  flightNumber: string
+  airline: string
+  departure: string
+  arrival: string
+  departureTime: string
+  arrivalTime: string
+  seatClass: string
+  seatNumber: string
+  status: string
+  createdAt: string
 }
 
-const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
-    <Box>
-        <Typography variant="h5" fontWeight="bold" letterSpacing={2} sx={{ color: '#1E2A3C', marginBottom: 2 }}>
-            {title}
-        </Typography>
-        <Box padding={3} sx={{ border: 2, borderRadius: 3, borderColor: '#929292' }}>
-            {children}
-        </Box>
-    </Box>
-);
-
 export default function ReservationDetail() {
-    const reservationData: ReservationDetailData = {
-        reservationNumber: 'ABCDEFGHIJKLMN / 예약확정',
-        route: 'CJJ 제주 -------------- GMP 김포 대한항공(KE862편) / 왕복',
-        flightInfo: {
-            departureDate: '2025-1-22 16:25',
-            returnDate: '2025-1-26 16:25',
-        },
-        seatInfo: '15A (일반석)',
-        passengers: [
-            { name: '장서희', contact: '010-1234-1234' },
-        ],
-        totalPrice: '123,456원',
-    };
+  const { id } = useParams()
+  const [reservation, setReservation] = useState<ReservationDetail | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
 
-    const sections = [
-        {
-            title: '예약번호',
-            content: <Typography>{reservationData.reservationNumber}</Typography>,
-        },
-        {
-            title: '구간',
-            content: (
-                <>
-                    <Typography>{reservationData.route}</Typography>
-                    <Typography>가는날: {reservationData.flightInfo.departureDate}</Typography>
-                    <Typography>오는날: {reservationData.flightInfo.returnDate}</Typography>
-                </>
-            ),
-        },
-        {
-            title: '좌석정보',
-            content: <Typography>{reservationData.seatInfo}</Typography>,
-        },
-        {
-            title: '탑승객 정보',
-            content: reservationData.passengers.map((passenger, index) => (
-                <Typography key={index}>
-                    {`탑승자${index + 1}: ${passenger.name}, 연락처: ${passenger.contact}`}
-                </Typography>
-            )),
-        },
-        {
-            title: '결제 내역',
-            content: <Typography>총액: {reservationData.totalPrice}</Typography>,
-        },
-    ];
+  useEffect(() => {
+    const fetchReservationDetail = async () => {
+      try {
+        const token = localStorage.getItem('token')
+        if (!token) throw new Error('인증 토큰이 없습니다.')
 
+        const response = await fetch(`${API_URL}/${id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        if (!response.ok) throw new Error('예약 정보를 불러올 수 없습니다.')
+
+        const data = await response.json()
+        setReservation(data)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : '알 수 없는 오류 발생')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchReservationDetail()
+  }, [id])
+
+  if (loading)
+    return <CircularProgress sx={{ display: 'block', margin: '20vh auto' }} />
+  if (error)
     return (
-        <Layout>
-            <Container fixed>
-                <Box sx={{ height: '100vh', borderRadius: 20 }}>
-                    <Box sx={{ padding: '5vw', textAlign: 'center' }}>
-                        <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#002597' }}>
-                            예약 상세 페이지
-                        </Typography>
-                    </Box>
-                    <Container>
-                        <Grid2 container spacing={2} sx={{ flexDirection: 'column', gap: 7 }}>
-                            {sections.map((section, index) => (
-                                <Section key={index} title={section.title}>
-                                    {section.content}
-                                </Section>
-                            ))}
-                        </Grid2>
-                    </Container>
-                </Box>
-            </Container>
-        </Layout>
-    );
+      <Typography color="error" sx={{ textAlign: 'center', mt: 5 }}>
+        {error}
+      </Typography>
+    )
+
+  return (
+    <Container>
+      <Box sx={{ mt: 5, textAlign: 'center' }}>
+        <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#002597' }}>
+          예약 상세 정보 ✈️
+        </Typography>
+        {reservation ? (
+          <Box
+            sx={{
+              mt: 4,
+              textAlign: 'left',
+              p: 3,
+              borderRadius: 2,
+              boxShadow: 3,
+            }}
+          >
+            <Typography variant="h5">
+              예약 번호: <strong>{reservation.reservationNumber}</strong>
+            </Typography>
+            <Typography variant="h6">
+              항공사: {reservation.airline} ({reservation.flightNumber})
+            </Typography>
+            <Typography variant="h6">
+              출발: {reservation.departure} -{' '}
+              {new Date(reservation.departureTime).toLocaleString()}
+            </Typography>
+            <Typography variant="h6">
+              도착: {reservation.arrival} -{' '}
+              {new Date(reservation.arrivalTime).toLocaleString()}
+            </Typography>
+            <Typography variant="h6">
+              좌석 등급: {reservation.seatClass} (좌석번호:{' '}
+              {reservation.seatNumber})
+            </Typography>
+            <Typography
+              variant="h6"
+              color={reservation.status === 'Confirmed' ? 'green' : 'red'}
+            >
+              예약 상태: {reservation.status}
+            </Typography>
+            <Typography variant="body1" sx={{ mt: 2, color: 'gray' }}>
+              예약 일시: {new Date(reservation.createdAt).toLocaleString()}
+            </Typography>
+          </Box>
+        ) : (
+          <Typography sx={{ mt: 5 }}>
+            예약 정보를 불러올 수 없습니다.
+          </Typography>
+        )}
+      </Box>
+    </Container>
+  )
 }
