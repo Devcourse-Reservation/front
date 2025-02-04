@@ -1,4 +1,3 @@
-// 📌 src/pages/ArrivalList.tsx
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Box, Container, Paper, Typography, Button } from '@mui/material'
 import { useState } from 'react'
@@ -27,11 +26,15 @@ export default function ArrivalList() {
 
   const handleSelectFlight = (flight: FlightData) => {
     setSelectedFlight(flight)
-    navigate('/reservation-confirm', {
+
+    console.log('📌 선택한 출발편 ID:', flightData.selectedDepartureFlight.id)
+    console.log('📌 선택한 도착편 ID:', flight.id)
+
+    // ✅ 선택한 출발편 및 도착편 정보를 가지고 좌석 선택 페이지로 이동
+    navigate('/select-seat', {
       state: {
-        selectedDepartureFlight: flightData.selectedDepartureFlight,
-        selectedArrivalFlight: flight,
         ...flightData,
+        selectedArrivalFlight: flight, // 선택한 도착편 추가
       },
     })
   }

@@ -9,6 +9,7 @@ import PaymentPage from './components/pages/PaymentPage' // 결제 페이지 추
 import ReservationConfirm from './components/pages/ReserevationConfirm'
 import Login from './components/pages/Login'
 import AuthCallback from './components/pages/AuthCallback'
+import SelectSeat from './components/pages/SelectSeat'
 
 const Routers = () => {
   return (
@@ -31,6 +32,7 @@ const Routers = () => {
           element={<ReservationConfirm />}
         />{' '}
         {/* ✅ 추가 */}
+        <Route path="/select-seat" element={<SelectSeat />} />{' '}
       </Routes>
     </BrowserRouter>
   )
