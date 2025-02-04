@@ -2,6 +2,8 @@ import { Box } from "@mui/material"
 import InfoButton from "../Buttons/InfoButton"
 import ListButton from "../Buttons/ListButton"
 import PrepareButton from "../Buttons/PrepareButton"
+import LoginButton from "../Buttons/LoginButton"
+import LogoutButton from "../Buttons/LogoutButton"
 import Logo from "../images/Logo"
 import BackgroundLetterAvatars from "../Buttons/avatar"
 
@@ -38,6 +40,12 @@ const Header = () => {
                         </Box>
                         <Box>
                             <PrepareButton />
+                        </Box>
+                        <Box>
+                            <LoginButton />
+                        </Box>
+                        <Box>
+                            <LogoutButton />
                         </Box>
                         <Box
                             sx={{
