@@ -21,16 +21,16 @@ export default function ReservationList() {
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const token = localStorage.getItem('token')
-        if (!token) throw new Error('인증 토큰이 없습니다.')
+        //const token = localStorage.getItem('token')
+        //if (!token) throw new Error('인증 토큰이 없습니다.')
 
-        console.log('📌 보낼 Access Token:', token) // 🔥 콘솔에 토큰 확인
+        //console.log('📌 보낼 Access Token:', token) // 🔥 콘솔에 토큰 확인
 
         const response = await fetch(API_URL, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
+            //Authorization: `Bearer ${token}`,
           },
           credentials: 'include',
         })

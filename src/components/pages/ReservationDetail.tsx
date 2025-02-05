@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { Box, Container, Typography, CircularProgress } from '@mui/material'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Box, Container, Typography, CircularProgress, Button } from '@mui/material'
 
 const API_URL = 'http://localhost:3000/tickets'
 
@@ -23,6 +23,7 @@ interface ReservationDetail {
 
 export default function ReservationDetail() {
   const { id } = useParams()
+  const navigate = useNavigate();
   const [reservation, setReservation] = useState<ReservationDetail | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
@@ -30,15 +31,20 @@ export default function ReservationDetail() {
   useEffect(() => {
     const fetchReservationDetail = async () => {
       try {
-        const token = localStorage.getItem('token')
-        if (!token) throw new Error('인증 토큰이 없습니다.')
-
+        //const token = localStorage.getItem('token')
+        //if (!token) throw new Error('인증 토큰이 없습니다.')
+        // const idres = await fetch("http://localhost:3000/auth/me", {
+        //   method: "GET",
+        //   credentials: "include", // ✅ httpOnly 쿠키 포함
+        // });
+        //console.log(idres)
         const response = await fetch(`${API_URL}/${id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
+            //Authorization: `Bearer ${token}`,
           },
+          credentials: 'include',
         })
 
         if (!response.ok) throw new Error('예약 정보를 불러올 수 없습니다.')
@@ -78,6 +84,11 @@ export default function ReservationDetail() {
 
     fetchReservationDetail()
   }, [id])
+
+  const handlePayment = () =>{
+    if (!reservation) return;
+    navigate('/payment', { state: {reservation}});
+  }
 
   if (loading)
     return <CircularProgress sx={{ display: 'block', margin: '20vh auto' }} />
@@ -134,6 +145,14 @@ export default function ReservationDetail() {
             >
               결제 상태: {reservation.paymentStatus}
             </Typography>
+            <Button
+                variant="contained"
+                color="primary"
+                sx={{ mt: 3, width: '100%' }}
+                onClick={handlePayment}
+              >
+                결제하기
+              </Button>
           </Box>
         ) : (
           <Typography sx={{ mt: 5 }}>

@@ -24,25 +24,25 @@ export default function ReservationConfirm() {
       setLoading(true)
       setError(null)
 
-      const token = localStorage.getItem('token')
-      if (!token) throw new Error('인증 토큰이 없습니다.')
+      const flightId = flightData.selectedDepartureFlight.id
+      const Seats = await fetch(`${API_URL}/${flightId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      })
+      console.log(Seats);
 
-      if (
-        !flightData ||
-        !flightData.selectedDepartureFlight ||
-        !flightData.selectedSeatId
-      ) {
-        throw new Error('예약할 항공편 또는 좌석 데이터가 없습니다.')
-      }
 
       console.log('📌 선택한 좌석 ID:', flightData.selectedSeatId)
       console.log('📌 선택한 항공편 ID:', flightData.selectedDepartureFlight.id)
 
       // ✅ API에 맞는 요청 데이터 구성
       const requestBody = {
-        flightId: flightData.selectedDepartureFlight.id, // 출발 항공편 ID
-        seatIds: [flightData.selectedSeatId], // ✅ 좌석 ID를 배열 형태로 전달
-        ticketType: 'one-way', // ✅ 현재 편도로 설정
+        flightId: flightId, // ✅ 선택한 항공편 ID
+        seatIds: [flightData.selectedSeatId], // ⚠️ 현재 좌석 ID는 하드코딩, 실제로는 선택해야 함
+        ticketType: 'round-trip', // ⚠️ 현재 편도 기준, 왕복이면 "round-trip"
       }
 
       console.log('📌 최종 예약 요청 데이터:', requestBody) // ✅ 최종 예약 요청 데이터 확인
@@ -51,7 +51,6 @@ export default function ReservationConfirm() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         credentials: 'include',
         body: JSON.stringify(requestBody),
