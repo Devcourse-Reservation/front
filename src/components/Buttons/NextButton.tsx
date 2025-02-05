@@ -3,16 +3,11 @@ import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import { useNavigate } from 'react-router-dom'
 
-interface SearchButtonProps {
-  onSearch: () => Promise<void>
-}
-
-export default function SearchButton({ onSearch }: SearchButtonProps) {
+export default function NextButton() {
   const navigate = useNavigate()
 
-  const handleSearch = async () => {
-    await onSearch()
-    navigate('/departure-list')
+  const handleSearch = () => {
+    navigate('/arrival-list')
   }
 
   return (
@@ -27,7 +22,7 @@ export default function SearchButton({ onSearch }: SearchButtonProps) {
           backgroundColor: '#1E2A3C',
         }}
       >
-        항공편 검색
+        다음
       </Button>
     </Stack>
   )

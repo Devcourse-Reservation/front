@@ -1,64 +1,30 @@
-import * as React from 'react';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import { Typography } from '@mui/material';
+import React from 'react'
+import { MenuItem, Select } from '@mui/material'
 
-const options = ['서울', '부산', '제주', '청주', '광주'];
-
-interface ButtonProps {
-    value: string;
-    onChange: (newValue: string) => void;
+interface Airport {
+  id: number
+  name: string
+  code: string
 }
 
-export default function DepartureButton({ value, onChange }: ButtonProps) {
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
+interface DepartureButtonProps {
+  value: string
+  onChange: (value: string) => void
+  options: Airport[] // ✅ 공항 데이터 리스트 추가
+}
 
-    const handleClickListItem = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleMenuItemClick = (event: React.MouseEvent<HTMLElement>, index: number) => {
-        onChange(options[index]);
-        setAnchorEl(null);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    return (
-        <div>
-            <List component="nav" aria-label="Location selector">
-                <ListItemButton onClick={handleClickListItem}>
-                    <ListItemText
-                        sx={{
-                            justifyItems: 'center'
-                        }}
-                        primary="From"
-                        secondary={value}
-                        primaryTypographyProps={{ fontSize: '48px' }}
-                        secondaryTypographyProps={{ fontSize: '20px', color: 'gray' }}
-                    />
-                </ListItemButton>
-            </List>
-            <Menu
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-            >
-                {options.map((option, index) => (
-                    <MenuItem
-                        key={option}
-                        onClick={(event) => handleMenuItemClick(event, index)}
-                    >
-                        {option}
-                    </MenuItem>
-                ))}
-            </Menu>
-        </div>
-    );
+export default function DepartureButton({
+  value,
+  onChange,
+  options,
+}: DepartureButtonProps) {
+  return (
+    <Select value={value} onChange={(e) => onChange(e.target.value)}>
+      {options.map((airport) => (
+        <MenuItem key={airport.id} value={airport.code}>
+          {airport.name} ({airport.code})
+        </MenuItem>
+      ))}
+    </Select>
+  )
 }

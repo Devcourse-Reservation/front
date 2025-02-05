@@ -1,97 +1,96 @@
-import React from 'react';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs, { Dayjs } from 'dayjs';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+/**DatePicker.tsx */
+import React from 'react'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import dayjs, { Dayjs } from 'dayjs'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
 
-function SelectDate() {
-    const [departureDate, setDepartureDate] = React.useState<Dayjs | null>(null); // 출발 날짜
-    const [arrivalDate, setArrivalDate] = React.useState<Dayjs | null>(null);     // 도착 날짜
-
-    const handleDepartureDateChange = (newValue: Dayjs | null) => {
-        setDepartureDate(newValue);
-        // 출발 날짜가 도착 날짜보다 이후라면 도착 날짜를 초기화
-        if (arrivalDate && newValue && newValue.isAfter(arrivalDate)) {
-            setArrivalDate(null);
-        }
-    };
-
-    const handleArrivalDateChange = (newValue: Dayjs | null) => {
-        setArrivalDate(newValue);
-    };
-
-    return (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 2,
-                    width: '100%',
-                    maxWidth: 200,
-                    alignContent: 'center'
-                }}
-            >
-                <Typography align="center" color='#5E5E5E'>
-                    날짜 선택
-                </Typography>
-
-                {/* 출발 날짜 선택 */}
-                <DatePicker
-                    label="출발 날짜"
-                    showDaysOutsideCurrentMonth
-                    format="YYYY / MM / DD"
-                    value={departureDate}
-                    onChange={handleDepartureDateChange}
-                    localeText={{
-                        cancelButtonLabel: '취소',
-                        clearButtonLabel: '지우기',
-                        todayButtonLabel: '오늘',
-                        okButtonLabel: '확인',
-                        previousMonth: '이전 달',
-                        nextMonth: '다음 달',
-                        start: '시작',
-                        end: '종료',
-                    }}
-                    slotProps={{
-                        textField: {
-                            fullWidth: true,
-                            sx: {
-                                height: '55px',
-                            }
-                        },
-                    }}
-                />
-
-                {/* 도착 날짜 선택 */}
-                <DatePicker
-                    label="도착 날짜"
-                    showDaysOutsideCurrentMonth
-                    format="YYYY / MM / DD"
-                    value={arrivalDate}
-                    onChange={handleArrivalDateChange}
-                    minDate={departureDate || undefined} // 출발 날짜 이후로만 선택 가능
-                    localeText={{
-                        cancelButtonLabel: '취소',
-                        clearButtonLabel: '지우기',
-                        todayButtonLabel: '오늘',
-                        okButtonLabel: '확인',
-                        previousMonth: '이전 달',
-                        nextMonth: '다음 달',
-                        start: '시작',
-                        end: '종료',
-                    }}
-                    slotProps={{
-                        textField: {
-                            fullWidth: true,
-                        },
-                    }}
-                />
-            </Box>
-        </LocalizationProvider>
-    );
+interface SelectDateProps {
+  departureDate: string | null
+  returnDate: string | null
+  setDepartureDate: (date: string | null) => void
+  setReturnDate: (date: string | null) => void
 }
 
-export default SelectDate;
+export default function SelectDate({
+  departureDate,
+  returnDate,
+  setDepartureDate,
+  setReturnDate,
+}: SelectDateProps) {
+  const handleDepartureDateChange = (newValue: Dayjs | null) => {
+    setDepartureDate(newValue ? newValue.format('YYYY-MM-DD') : null)
+    if (returnDate && newValue && newValue.isAfter(dayjs(returnDate))) {
+      setReturnDate(null)
+    }
+  }
+
+  const handleReturnChange = (newValue: Dayjs | null) => {
+    setReturnDate(newValue ? newValue.format('YYYY-MM-DD') : null)
+  }
+
+  const resetDates = () => {
+    setDepartureDate(null)
+    setReturnDate(null)
+  }
+
+  const containerStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 2,
+    width: '100%',
+    maxWidth: 200,
+    alignContent: 'center',
+  }
+
+  const textFieldStyle = {
+    height: '55px',
+  }
+
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
+      <Box sx={containerStyle}>
+        <Typography align="center" color="#5E5E5E">
+          날짜 선택
+        </Typography>
+
+        <DatePicker
+          label="출발 날짜"
+          value={departureDate ? dayjs(departureDate) : null}
+          onChange={handleDepartureDateChange}
+          format="YYYY / MM / DD"
+          slotProps={{
+            textField: {
+              fullWidth: true,
+              error: !departureDate,
+              helperText: !departureDate ? '날짜를 선택해주세요.' : '',
+              sx: textFieldStyle,
+            },
+          }}
+        />
+
+        <DatePicker
+          label="도착 날짜"
+          value={returnDate ? dayjs(returnDate) : null}
+          onChange={handleReturnChange}
+          minDate={departureDate ? dayjs(departureDate) : undefined}
+          format="YYYY / MM / DD"
+          slotProps={{
+            textField: {
+              fullWidth: true,
+              error: !returnDate && !!departureDate,
+              helperText:
+                !returnDate && !!departureDate
+                  ? '도착 날짜를 선택해주세요.'
+                  : '',
+              sx: textFieldStyle,
+            },
+          }}
+        />
+      </Box>
+    </LocalizationProvider>
+  )
+}
