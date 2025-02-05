@@ -78,6 +78,10 @@ const Header = () => {
             <ListButton />
             <PrepareButton />
           </Box>
+          {/* 관리자 인증 버튼 */}
+          <Button variant="contained" color="primary" onClick={() => navigate('/admin-verification')}>
+            관리자 인증하기
+          </Button>
 
           {/* 로그인 상태 & 로그아웃 버튼 */}
           <Box

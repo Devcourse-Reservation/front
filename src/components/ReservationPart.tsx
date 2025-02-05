@@ -15,7 +15,7 @@ import BackgroundBox from './images/Background'
 import Layout from './layouts/Layout'
 import { useNavigate } from 'react-router-dom'
 import { searchFlights } from '../utils/searchFlights'
-import { Flight } from '../types'
+//import { Flight } from '../types'
 
 const TicketTypeButtons = () => {
   const buttonStyle = {

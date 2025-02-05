@@ -9,6 +9,7 @@ import PaymentPage from './components/pages/PaymentPage' // 결제 페이지 추
 import ReservationConfirm from './components/pages/ReserevationConfirm'
 import Login from './components/pages/Login'
 import AuthCallback from './components/pages/AuthCallback'
+import AdminVerification from './components/pages/VerifyAdmin'
 
 const Routers = () => {
   return (
@@ -26,6 +27,7 @@ const Routers = () => {
         <Route path="/payment" element={<PaymentPage />} />{' '}
         {/* ✅ 결제 페이지 추가 */}
         <Route path="/ready" element={<ReadyPage />} />
+        <Route path="/admin-verification" element={<AdminVerification />} />
         <Route
           path="/reservation-confirm"
           element={<ReservationConfirm />}
