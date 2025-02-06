@@ -30,7 +30,7 @@ ProAliance는 항공편 예약 서비스를 제공합니다.
 <br />
 <br />
 <br />
-## 🛩 ProAliance만 있으면 당신도 항공권 소유자 📲🎯지금 바로 항공권 소유자에 도전하세요
+## ProAliance만 있으면 당신도 항공권 소유자. 지금 바로 항공권 소유자에 도전하세요
 
 
 ![Image](https://github.com/user-attachments/assets/bfa13709-16cb-4c6f-92d8-d0dfc2954569)
