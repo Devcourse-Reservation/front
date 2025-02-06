@@ -5,6 +5,7 @@ ProAliance는 항공편 예약 서비스를 제공합니다.
 최근 여행 수요의 증가로 인해 항공편 예약 또한 치열해지고 있습니다.
 <br />
 저희도 그 시장에 뛰어들어🌊 이용자 분들의 불편함을 줄이는데 기여하고자 합니다.
+![Image](https://github.com/user-attachments/assets/bfa13709-16cb-4c6f-92d8-d0dfc2954569)
 <br />
 <br />
 <br />
@@ -33,4 +34,3 @@ ProAliance는 항공편 예약 서비스를 제공합니다.
 ## ProAliance만 있으면 당신도 항공권 소유자. 지금 바로 항공권 소유자에 도전하세요.
 
 
-![Image](https://github.com/user-attachments/assets/bfa13709-16cb-4c6f-92d8-d0dfc2954569)
